@@ -1,0 +1,8 @@
+# dpkg-source options
+
+# Doc: dpkg-source man page
+
+# Required because usr/share/doc/bung/*.{html,odt.pdf} filenames have spaces in
+# the upstream tarball which must be replaced by underscores in the Debian 
+# package because doc-base does not support spaces in file names
+include-removal
