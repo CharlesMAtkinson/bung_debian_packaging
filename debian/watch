@@ -1,4 +1,4 @@
 version=4
-opts="filenamemangle=s%(?:.*?)?v?(\d[\d.]*)\.tar\.gz%@PACKAGE@-$1.tgz%" \
-    https://github.com/CharlesMAtkinson/bung/tags \
-    (?:.*?/)?v?(\d[\d.]*)\.tar\.gz debian uupdate
+opts="filenamemangle=s%(?:.*?)?v?(\d[\d.]*)\.source_with_htm_and_pdf\.tgz%@PACKAGE@-$1.tgz%" \
+    https://github.com/CharlesMAtkinson/bung/releases \
+    .+/bung_v?(\d[\d.]*)\.source_with_htm_and_pdf\.tgz debian uupdate

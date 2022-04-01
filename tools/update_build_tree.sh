@@ -17,7 +17,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 # Purpose: 
+#   * Sets file permissions
 #   * Updates debian/changelog and debian/copyright for the requested package version, example 3.2.2-1
+#   * Removes any source/bung_<version>.orig.tar.gz for an earlier version
 #   * Creates a tag with the requested package version's name
 
 # Usage:
@@ -29,6 +31,8 @@
 #    +-- initialise
 #    |   |
 #    |   +-- usage
+#    |
+#    +-- set_perms
 #    |
 #    +-- update
 #    |
@@ -344,8 +348,13 @@ function initialise {
 
     # Configure shell environment
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    export LANG=en_GB.UTF-8
-    export LANGUAGE=en_GB.UTF-8
+    buf=$(locale --all-locales | grep 'en_.*utf8')
+    if [[ $buf = '' ]]; then
+        echo 'ERROR: locale --all-locales did not list any English UTF8 locales' >&2
+        exit 1
+    fi
+    export LANG=$(echo "$buf" | head -1)
+    export LANGUAGE=$LANG
     for var_name in LC_ADDRESS LC_ALL LC_COLLATE LC_CTYPE LC_IDENTIFICATION \
         LC_MEASUREMENT LC_MESSAGES LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER \
         LC_TELEPHONE LC_TIME 
@@ -540,6 +549,32 @@ function msg {
 }  #  end of function msg
 
 #--------------------------
+# Name: set_perms
+# Purpose: sets file permissions
+#--------------------------
+function set_perms {
+    fct "${FUNCNAME[0]}" 'started'
+    local executables list
+
+    msg I 'Setting 644 permissions on all files except under .git'
+    find -path ./.git -prune -o -type f -exec chmod 644 {} + || finalise 1
+
+    executables=($(echo .git/hooks/{post-checkout,post-merge,pre-commit}))
+    executables+=($(echo debian/{postinst,postrm,rules}))
+    executables+=($(echo tools/{build_deb.sh,update_build_tree.sh}))
+    executables+=($(echo tools/git-store-meta/git-store-meta.pl))
+    executables+=($(echo tools/git-store-meta/hooks-for-bung/{post-checkout,post-merge,pre-commit}))
+    for fn in "${executables[@]}"
+    do
+        list+=$'\n'"$fn"
+    done
+    msg I "Setting 755 permissions on $list"
+    chmod 755 "${executables[@]}" || finalise 1
+
+    fct "${FUNCNAME[0]}" 'returning'
+}  # end of function set_perms
+
+#--------------------------
 # Name: tag
 # Purpose: creates a git tag named after the package version
 #--------------------------
@@ -611,6 +646,17 @@ function update {
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Cannot be automatically updated
 
+    # source/bung_<version>.orig.tar.gz
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    for fn in $(echo source/bung_*.orig.tar.gz)
+    do
+        [[ $fn = 'source/bung_*.orig.tar.gz' ]] && break
+        [[ $fn = source/bung_$new_bung_ver.orig.tar.gz ]] && continue
+        msg I "Removing $fn from tree and git"
+        git rm $fn || finalise 1
+        rm -f $fn || finalise 1
+    done
+
     fct "${FUNCNAME[0]}" 'returning'
 }  # end of function update
 
@@ -648,6 +694,7 @@ function usage {
 # Purpose: where it all happens
 #--------------------------
 initialise "${@:-}" 
+set_perms
 update
 commit
 [[ $committed_flag ]] && tag

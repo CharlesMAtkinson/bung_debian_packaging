@@ -34,12 +34,6 @@
 #    |   +-- usage
 #    |
 #    +-- populate_tmp_dir
-#    |   |
-#    |   +-- mk_htm_and_pdf_from_odts
-#    |       |
-#    |       +-- mk_htm_and_pdf_from_odt
-#    |       |
-#    |       +-- mk_htm_or_pdf_from_odt
 #    |
 #    +-- build
 #    |
@@ -333,7 +327,7 @@ function finalise {
 
     # Remove temporary directory
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~
-    msg I "DEVEL: Not removing temprary directory $tmp_dir"
+    msg I "Not removing temporary directory $tmp_dir"
     #if [[ $tmp_dir_created_flag ]]; then
     #    if ((my_exit_code==0)); then
     #        [[ ${tmp_dir:-} =~ $tmp_dir_regex ]] && rm -fr "$tmp_dir" 
@@ -361,8 +355,13 @@ function initialise {
 
     # Configure shell environment
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    export LANG=en_GB.UTF-8
-    export LANGUAGE=en_GB.UTF-8
+    buf=$(locale --all-locales | grep 'en_.*utf8')
+    if [[ $buf = '' ]]; then
+        echo 'ERROR: locale --all-locales did not list any English UTF8 locales' >&2
+        exit 1
+    fi
+    export LANG=$(echo "$buf" | head -1)
+    export LANGUAGE=$LANG
     for var_name in LC_ADDRESS LC_ALL LC_COLLATE LC_CTYPE LC_IDENTIFICATION \
         LC_MEASUREMENT LC_MESSAGES LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER \
         LC_TELEPHONE LC_TIME 
@@ -523,104 +522,6 @@ function initialise {
 }  # end of function initialise
 
 #--------------------------
-# Name: mk_htm_and_pdf_from_odt
-# Purpose: makes .htm and .pdf versions of the .odt file
-#--------------------------
-function mk_htm_and_pdf_from_odt {
-    fct "${FUNCNAME[0]}" 'started'
-    local buf cmd rc
-    local htm_fn odt_fn out_dir pdf_fn
-
-    # Parse the argument
-    # ~~~~~~~~~~~~~~~~~~
-    odt_fn=$1
-    buf=$(ck_file "$odt_fn" f:r 2>&1)
-    [[ $buf != '' ]] && msg E "$buf"
-    out_dir=${odt_fn%/*}
-    buf=$(ck_file "$out_dir" d:rwx 2>&1)
-    [[ $buf != '' ]] && msg E "$buf"
-
-    # Make the new versions
-    # ~~~~~~~~~~~~~~~~~~~~~
-    mk_htm_or_pdf_from_odt htm:HTML "$odt_fn" "$out_dir" .htm
-    mk_htm_or_pdf_from_odt pdf:writer_pdf_Export "$odt_fn" "$out_dir" .pdf
-
-    fct "${FUNCNAME[0]}" 'returning'
-}  # end of function mk_htm_and_pdf_from_odt
-
-#--------------------------
-# Name: mk_htm_and_pdf_from_odts
-# Purpose: makes .pdf and .htm versions of the .odt files
-#--------------------------
-function mk_htm_and_pdf_from_odts {
-    fct "${FUNCNAME[0]}" 'started'
-    local odt_fn
-
-    while IFS= read -r -d '' odt_fn; do
-        mk_htm_and_pdf_from_odt "$odt_fn"
-    done < <(find "$bung_ver_dir" -type f -name '*.odt' -print0)
-
-    fct "${FUNCNAME[0]}" 'returning'
-}  # end of function mk_htm_and_pdf_from_odts
-
-#--------------------------
-# Name: mk_htm_or_pdf_from_odt
-# Purpose: makes .htm or .pdf version of the .odt file
-# Arguments
-#   $1 --convert-to option argument
-#   $2 .odt file name
-#   $3 output directory
-#   $4 output file extension
-#--------------------------
-function mk_htm_or_pdf_from_odt {
-    fct "${FUNCNAME[0]}" 'started'
-    local buf cmd msg rc
-    local convert_to_opt_arg out_dir out_fn_ext
-    local odt_fn out_fn
-    local ck_file_out
-
-    # Parse the arguments
-    # ~~~~~~~~~~~~~~~~~~
-    convert_to_opt_arg=$1
-    odt_fn=$2
-    out_dir=$3
-    out_fn_ext=$4
-
-    # Make the new version
-    # ~~~~~~~~~~~~~~~~~~~~
-    #   * soffice is difficult to error trap (0 exit status on error, error messages not documented) so any existing output file is
-    #     removed before running soffice so output file creation can be used as a success indication
-    #   * -env is required to workaound failure when soffice is aready running
-    msg I "Making $out_fn_ext version of $odt_fn"
-    out_fn=${odt_fn%.odt}$out_fn_ext
-    rm -f "$out_fn"
-    cmd=(soffice
-        --headless
-        -env:UserInstallation="file:///$tmp_dir/LibreOffice_Conversion"
-        --convert-to "$convert_to_opt_arg"
-        --outdir "$out_dir"
-        "$odt_fn"
-    )
-    buf=$("${cmd[@]}" 2>&1)
-    rc=$?
-    ck_file_out=$(ck_file "$out_fn" f:r 2>&1)
-    if ((rc!=0)) || [[ $ck_file_out != '' ]]; then
-        msg="Command: ${cmd[*]}"
-        msg+=$'\n'"Return code: $rc"
-        msg+=$'\n'"Output: $buf"
-        [[ $ck_file_out != '' ]] && msg+=$'\n'"$ck_file_out"
-    fi
-
-    # Ensure newline at .htm EoF
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # Requred by POSIX and by Debian packaging
-    msg I "DEVEL: out_fn_ext: $out_fn_ext, out_fn: '$out_fn'" 
-    [[ $out_fn_ext = .htm ]] && echo >> "$out_fn"
-    
-    fct "${FUNCNAME[0]}" 'returning'
-}  # end of function mk_htm_or_pdf_from_odt
-
-#--------------------------
 # Name: msg
 # Purpose: generalised messaging interface
 # Arguments:
@@ -727,11 +628,6 @@ function populate_tmp_dir {
         msg+=$'\n'"Output: $buf"
         msg E "$msg"
     fi
-
-    # Make .pdf and .htm versions of the .odt files
-    #--------------------------
-    msg I "DEVEL: commented out mk_htm_and_pdf_from_odts.  If OK, remove the function"
-    #mk_htm_and_pdf_from_odts
 
     # Copy the debian directory
     # ~~~~~~~~~~~~~~~~~~~~~~~~~

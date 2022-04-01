@@ -1,5 +1,5 @@
-bung (3.2.2-2) UNRELEASED; urgency=low
+bung (3.2.3-1) UNRELEASED; urgency=low
 
   * Initial release. Closes: #985918
 
- -- Charles Atkinson <bung@charlesmatkinson.org>  Thu, 17 Mar 2022 08:52:24 +0530
+ -- Charles Atkinson <bung@charlesmatkinson.org>  Fri, 01 Apr 2022 07:59:18 +0530
