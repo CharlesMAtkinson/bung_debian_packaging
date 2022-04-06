@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: bung
-Source: https://redmine.auroville.org.in/projects/bung
+Source: https://github.com/CharlesMAtkinson/bung
 Copyright: 2013-2022 Charles Atkinson
 
 Files: *

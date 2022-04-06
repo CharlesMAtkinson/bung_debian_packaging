@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Charles Atkinson <bung@charlesmatkinson.org>
 Build-Depends: debhelper (>=13~)
 Standards-Version: 4.1.4
-Homepage: https://redmine.auroville.org.in/projects/bung
+Homepage: https://github.com/CharlesMAtkinson/bung
 
 Package: bung
 Architecture: all
