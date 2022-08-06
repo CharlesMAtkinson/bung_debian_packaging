@@ -1,9 +1,10 @@
 Source: bung
+Rules-Requires-Root: no
 Section: admin
 Priority: optional
 Maintainer: Charles Atkinson <bung@charlesmatkinson.org>
-Build-Depends: debhelper (>=13~)
-Standards-Version: 4.1.4
+Build-Depends: debhelper (>=13~), debhelper-compat (= 13)
+Standards-Version: 4.5.1
 Homepage: https://github.com/CharlesMAtkinson/bung
 
 Package: bung
