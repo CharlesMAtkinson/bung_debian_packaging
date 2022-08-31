@@ -327,14 +327,14 @@ function finalise {
 
     # Remove temporary directory
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~
-    msg I "Not removing temporary directory $tmp_dir"
-    #if [[ $tmp_dir_created_flag ]]; then
+    if [[ $tmp_dir_created_flag ]]; then
+        msg I "Not removing temporary directory $tmp_dir"
     #    if ((my_exit_code==0)); then
     #        [[ ${tmp_dir:-} =~ $tmp_dir_regex ]] && rm -fr "$tmp_dir" 
     #    else
     #        msg I "Not removing temprary directory $tmp_dir"
     #    fi
-    #fi
+    fi
 
     # Remove PID file
     # ~~~~~~~~~~~~~~~

@@ -560,7 +560,7 @@ function set_perms {
     find -path ./.git -prune -o -type f -exec chmod 644 {} + || finalise 1
 
     executables=($(echo .git/hooks/{post-checkout,post-merge,pre-commit}))
-    executables+=($(echo debian/{postinst,postrm,rules}))
+    executables+=($(echo debian/{postinst,postrm,mk_htm_and_pdf_from_odts.sh,prerm,rules}))
     executables+=($(echo tools/{build_deb.sh,update_build_tree.sh}))
     executables+=($(echo tools/git-store-meta/git-store-meta.pl))
     executables+=($(echo tools/git-store-meta/hooks-for-bung/{post-checkout,post-merge,pre-commit}))

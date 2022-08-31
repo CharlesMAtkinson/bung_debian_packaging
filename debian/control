@@ -3,7 +3,8 @@ Rules-Requires-Root: no
 Section: admin
 Priority: optional
 Maintainer: Charles Atkinson <bung@charlesmatkinson.org>
-Build-Depends: debhelper (>=13~), debhelper-compat (= 13)
+Build-Depends: debhelper (>=13~), debhelper-compat (= 13), default-jre,
+                libreoffice-common, libreoffice-writer
 Standards-Version: 4.5.1
 Homepage: https://github.com/CharlesMAtkinson/bung
 
