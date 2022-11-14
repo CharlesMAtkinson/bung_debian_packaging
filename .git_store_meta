@@ -3,7 +3,7 @@
 README.md	f	2022-04-01T09:21:08Z
 debian/.debhelper/generated/bung/installed-by-dh_install	f	2021-06-15T04:43:00Z
 debian/bung.rm_old_logs.timer	f	2022-08-04T07:08:18Z
-debian/changelog	f	2022-08-31T02:10:36Z
+debian/changelog	f	2022-11-14T03:01:59Z
 debian/control	f	2022-08-28T05:08:46Z
 debian/copyright	f	2022-04-06T00:37:10Z
 debian/debhelper-build-stamp	f	2022-02-12T09:35:02Z
@@ -17,7 +17,7 @@ debian/source/include-binaries	f	2022-02-02T02:34:25Z
 debian/source/local-options	f	2021-03-06T03:02:53Z
 debian/source/options	f	2021-06-24T03:20:49Z
 debian/watch	f	2022-03-24T07:16:08Z
-source/bung_3.2.6.orig.tar.gz	f	2022-08-05T07:12:46Z
+source/bung_3.2.7.orig.tar.gz	f	2022-11-11T03:45:53Z
 tools/README.txt	f	2022-03-08T09:19:05Z
 tools/build_deb.sh	f	2022-08-26T02:47:34Z
 tools/git-store-meta/LICENSE	f	2022-02-28T06:13:48Z
