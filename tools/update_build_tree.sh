@@ -653,7 +653,7 @@ function update {
         [[ $fn = 'source/bung_*.orig.tar.gz' ]] && break
         [[ $fn = source/bung_$new_bung_ver.orig.tar.gz ]] && continue
         msg I "Removing $fn from tree and git"
-        git rm $fn || finalise 1
+        git rm $fn | grep -v 'did not match any files'
         rm -f $fn || finalise 1
     done
 

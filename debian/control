@@ -13,12 +13,14 @@ Architecture: all
 Multi-Arch: foreign
 Depends: at,
          anacron | cron | cron-daemon,
-         default-mta | mail-transport-agent,
          lsscsi,
          rsyslog | system-log-daemon,
          ${misc:Depends}
 Recommends: rsync, ssh-client
-Suggests: lsof, yad | xenity
+Suggests:
+         default-mta | mail-transport-agent,
+         lsof,
+         yad | xenity
 Description: Database, file, router and switch backup to file system for one or many devices
  bung (BackUp Next Generation) was created in 2013 and is now known to be in
  regular use for backing up hundreds of laptops, PCs, phones, servers, routers
@@ -32,8 +34,8 @@ Description: Database, file, router and switch backup to file system for one or 
  .
  The rsync-based files backup creates a "rolling full" backup which is easy to
  browse and restore from using everyday tools. Changed and deleted files are
- kept for a configurable number of days. When the source is on an LVM volume,
- snapshots can be used.
+ retained for a configurable number of days, backups or file system usage %.
+ When the source is on an LVM volume, snapshots can be used.
  .
  Backup jobs are scheduled or initiated by plugging in hotplug storage such as
  USB disks. When hotplug storage starts a backup, on-screen notifications
@@ -46,6 +48,6 @@ Description: Database, file, router and switch backup to file system for one or 
  Developed in a production environment, bung's log messages are designed to
  give the information needed to investigate problems.
  .
- Backup reports are sent by email.
+ Backup reports are optionally sent by email or by notification plug-ins.
  .
  bung is written in bash and uses the GPL-2.0+ license.
