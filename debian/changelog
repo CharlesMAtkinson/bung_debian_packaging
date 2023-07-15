@@ -1,5 +1,5 @@
-bung (3.5.1-1) unstable; urgency=low
+bung (3.5.2-1) unstable; urgency=low
 
   * Initial release. Closes: #985918
 
- -- Charles Atkinson <bung@charlesmatkinson.org>  Mon, 27 Feb 2023 10:29:00 +0530
+ -- Charles Atkinson <bung@charlesmatkinson.org>  Sat, 15 Jul 2023 08:34:21 +0100

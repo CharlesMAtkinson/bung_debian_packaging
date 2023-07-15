@@ -5,7 +5,7 @@ Priority: optional
 Maintainer: Charles Atkinson <bung@charlesmatkinson.org>
 Build-Depends: debhelper (>=13~), debhelper-compat (= 13), default-jre,
                 libreoffice-common, libreoffice-writer
-Standards-Version: 4.6.1.0
+Standards-Version: 4.6.2.0
 Homepage: https://github.com/CharlesMAtkinson/bung
 
 Package: bung
